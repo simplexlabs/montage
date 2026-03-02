@@ -133,7 +133,9 @@ Built on the [Remotion Next.js App Router + Tailwind template](https://github.co
 
 ## License
 
-Note that for some entities a Remotion company license is needed. [Read the terms here](https://github.com/remotion-dev/remotion/blob/main/LICENSE.md).
+MIT — see [LICENSE](LICENSE).
+
+Note: Remotion itself has its own license. Some entities may need a Remotion company license. [Read their terms here](https://github.com/remotion-dev/remotion/blob/main/LICENSE.md).
 
 ---
 
