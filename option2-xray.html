@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Option 2: X-Ray Discovery</title>
+    <link href="https://cdn.jsdelivr.net/npm/geist@1.0.3/dist/fonts/geist-sans/style.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/geist@1.0.3/dist/fonts/geist-mono/style.css" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Geist', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background-color: #fafafa;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #111827;
+        }
+
+        .layout {
+            display: flex;
+            gap: 24px;
+            width: 100%;
+            max-width: 1300px;
+            position: relative;
+        }
+
+        .left-pane {
+            flex: 1;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            /* Initially centered if right pane is hidden */
+            margin: 0 auto;
+            max-width: 600px;
+        }
+
+        .right-pane {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            width: 0;
+            transform: translateX(20px);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        /* State when scan is complete */
+        .layout.show-json .left-pane {
+            margin: 0;
+        }
+
+        .layout.show-json .right-pane {
+            opacity: 1;
+            width: 100%;
+            /* Will take up flex space */
+            transform: translateX(0);
+            overflow: visible;
+        }
+
+        /* The main container matches Simplex's cards */
+        .form-container {
+            background-color: #ffffff;
+            width: 100%;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            padding: 48px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            /* For scanner */
+        }
+
+        /* Scanner Animation */
+        #scanner {
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            background-color: #6366F1;
+            box-shadow: 0 0 16px 4px rgba(99, 102, 241, 0.4);
+            top: 0;
+            left: 0;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .scanning #scanner {
+            opacity: 1;
+            animation: scan 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes scan {
+            0% {
+                top: 0;
+                opacity: 1;
+            }
+
+            90% {
+                top: 100%;
+                opacity: 1;
+            }
+
+            100% {
+                top: 100%;
+                opacity: 0;
+            }
+        }
+
+        /* The HTML connection layer */
+        #connection-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .connection-line {
+            position: absolute;
+            height: 2px;
+            width: 0;
+            transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.5s ease, box-shadow 0.5s ease;
+            background-color: #6366F1;
+            box-shadow: 0 0 8px rgba(99, 102, 241, 0.4);
+            transform-origin: left center;
+        }
+
+        .connection-line::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(to right, #6366F1 50%, transparent 50%);
+            background-size: 8px 2px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .connection-line.dotted {
+            background-color: transparent;
+            box-shadow: none;
+        }
+
+        .connection-line.dotted::before {
+            opacity: 0.5;
+        }
+
+        /* The cursor that blinks while text types out */
+        .typing-cursor {
+            border-right: 2px solid #a5d6ff;
+            animation: blink 0.75s step-end infinite;
+            padding-right: 2px;
+        }
+
+        @keyframes blink {
+
+            from,
+            to {
+                border-color: transparent
+            }
+
+            50% {
+                border-color: #a5d6ff;
+            }
+        }
+
+
+        /* X-Ray Boxes */
+        .xray-container {
+            position: relative;
+            border: 2px dashed transparent;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .xray-container.active {
+            border-color: #6366F1;
+            background-color: rgba(99, 102, 241, 0.03);
+            padding: 8px;
+            /* Give it some breathing room inside the dotted box */
+            margin: -8px;
+        }
+
+        .tooltip {
+            position: absolute;
+            top: -24px;
+            left: 0;
+            background-color: #111827;
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: 'Geist Mono', monospace;
+            font-size: 11px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        .xray-container.active .tooltip {
+            opacity: 1;
+            transform: translateY(-5px);
+        }
+
+        /* Typography for form questions */
+        .question-title {
+            font-size: 18px;
+            color: #111827;
+            margin-bottom: 12px;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+        }
+
+        .sub-text {
+            font-size: 13px;
+            color: #6B7280;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        /* Option Cards (Radios/Checkboxes) */
+        .option-box {
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            background-color: #ffffff;
+            position: relative;
+        }
+
+        .xray-container.active .option-box {
+            border-color: rgba(99, 102, 241, 0.5);
+        }
+
+        .option-box input[type="radio"],
+        .option-box input[type="checkbox"] {
+            margin-right: 14px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #6366F1;
+        }
+
+        .option-box .option-label {
+            font-size: 15px;
+            color: #374151;
+            flex: 1;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-magic {
+            background-color: #111827;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-magic:hover {
+            background-color: #374151;
+        }
+
+        /* Output JSON */
+        .json-output-container {
+            background-color: #0c0c0c;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            display: none;
+            margin-top: 150px;
+        }
+
+        .json-output-container.visible {
+            opacity: 1;
+            transform: translateY(0);
+            display: block;
+        }
+
+        pre {
+            font-family: 'Geist Mono', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #e5e7eb;
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
+        .code-string {
+            color: #a5d6ff;
+        }
+
+        .code-key {
+            color: #7ee787;
+        }
+
+        .code-punctuation {
+            color: #8b949e;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Connection Layer -->
+    <div id="connection-layer"></div>
+
+    <div class="layout" id="main-layout">
+
+        <div class="left-pane">
+            <div class="top-bar">
+                <div>
+                    <h2 style="font-size: 16px; font-weight: 600;">Browser Agent View</h2>
+                    <p style="font-size: 13px; color: #6B7280;">Watch how the agent discovers fields.</p>
+                </div>
+                <button class="btn btn-magic" id="run-agent-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                    </svg>
+                    Run Discovery Agent
+                </button>
+            </div>
+
+            <div class="form-container" id="form-container">
+                <div id="scanner"></div>
+
+                <div class="header" style="text-align: center; margin-bottom: 36px;">
+                    <h1 style="font-size: 26px; font-weight: 600; letter-spacing: -0.02em; color: #111827;">Intake
+                        Questionnaire</h1>
+                </div>
+
+                <div class="page active" id="page-6">
+                    <!-- Wrap the target in the xray container -->
+                    <div class="xray-container" id="medical-target">
+                        <div class="tooltip">#medical-conditions-field option-selector="label"</div>
+
+                        <h3 class="question-title" style="margin-top: 4px;">Do any of the following apply to you? *</h3>
+                        <p class="sub-text" style="margin-bottom: 16px;">Please select all that match your medical
+                            history.</p>
+
+                        <div style="padding-right: 4px; padding-bottom: 12px; margin-left: -4px; padding-left: 4px;"
+                            id="medical-conditions-field">
+
+                            <label class="option-box" id="opt-0">
+                                <input type="checkbox" disabled>
+                                <span class="option-label">None of the below</span>
+                            </label>
+                            <label class="option-box" id="opt-1">
+                                <input type="checkbox" disabled>
+                                <span class="option-label">Essential hypertension requiring pharmacological
+                                    intervention</span>
+                            </label>
+                            <label class="option-box" id="opt-2">
+                                <input type="checkbox" disabled>
+                                <span class="option-label">Diagnosed with chronic metabolic disorder (Type A or
+                                    B)</span>
+                            </label>
+                            <label class="option-box" id="opt-3">
+                                <input type="checkbox" disabled>
+                                <span class="option-label">Chronic localized inflammatory arthropathy</span>
+                            </label>
+                            <label class="option-box" id="opt-4">
+                                <input type="checkbox" disabled>
+                                <span class="option-label">Recurrent benign paroxysmal positional vertigo</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="buttons-container"
+                        style="display: flex; justify-content: space-between; align-items: center; margin-top: 32px; gap: 16px;">
+                        <button class="btn btn-prev"
+                            style="background-color: transparent; color: #4B5563; border: 1px solid rgba(0, 0, 0, 0.1);">Back</button>
+                        <button class="btn btn-next disabled"
+                            style="background-color: #E5E7EB; color: #9CA3AF; cursor: not-allowed; box-shadow: none;">Continue</button>
+                    </div>
+
+                    <div class="progress-container"
+                        style="display: flex; align-items: center; margin-top: 40px; padding-top: 24px; border-top: 1px solid rgba(0, 0, 0, 0.05);">
+                        <div class="progress-bar"
+                            style="flex: 1; height: 4px; background-color: #E5E7EB; border-radius: 2px; overflow: hidden; margin-right: 16px;">
+                            <div class="progress-fill"
+                                style="height: 100%; background-color: #6366F1; border-radius: 2px; transition: width 0.4s ease; width: 42%;">
+                            </div>
+                        </div>
+                        <span class="progress-text"
+                            style="font-size: 12px; color: #6B7280; font-weight: 500; font-variant-numeric: tabular-nums;">42%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-pane" id="right-pane">
+            <div class="json-output-container" id="json-output">
+                <div
+                    style="font-size: 11px; text-transform: uppercase; color: #8b949e; letter-spacing: 0.05em; margin-bottom: 12px; font-weight: 600;">
+                    STRUCTURED DATA</div>
+                <pre style="font-size: 15px; margin-top: 10px; position: relative;"><span class="json-structure" style="opacity: 0; transition: opacity 0.5s;"><span class="code-punctuation">{</span>
+  <span class="code-key">"medical_conditions"</span><span class="code-punctuation">: {</span>
+    <span class="code-key" id="json-key-field-type">"field_type"</span><span class="code-punctuation">: </span><span class="code-string">"checkbox"</span><span class="code-punctuation">,</span>
+    <span class="code-key" id="json-key-container">"container"</span><span class="code-punctuation">: </span><span class="code-string">"#medical-conditions-field"</span><span class="code-punctuation">,</span>
+    <span class="code-key" id="json-key-options">"options"</span><span class="code-punctuation" id="json-key-container">: [</span>
+</span>      <span class="code-string" id="json-opt-0" style="display:inline-block; color: #e5e7eb; position: relative;"></span><span class="json-structure" style="opacity: 0; transition: opacity 0.5s;"><span class="code-punctuation">,</span></span>
+      <span class="code-string" id="json-opt-1" style="display:inline-block; color: #e5e7eb; position: relative;"></span><span class="json-structure" style="opacity: 0; transition: opacity 0.5s;"><span class="code-punctuation">,</span></span>
+      <span class="code-string" id="json-opt-2" style="display:inline-block; color: #e5e7eb; position: relative;"></span><span class="json-structure" style="opacity: 0; transition: opacity 0.5s;"><span class="code-punctuation">,</span></span>
+      <span class="code-string" id="json-opt-3" style="display:inline-block; color: #e5e7eb; position: relative;"></span><span class="json-structure" style="opacity: 0; transition: opacity 0.5s;"><span class="code-punctuation">,</span></span>
+      <span class="code-string" id="json-opt-4" style="display:inline-block; color: #e5e7eb; position: relative;"></span><span class="json-structure" style="opacity: 0; transition: opacity 0.5s;">
+    <span class="code-punctuation">]</span>
+  <span class="code-punctuation">}</span>
+<span class="code-punctuation">}</span></span></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const btn = document.getElementById('run-agent-btn');
+        const container = document.getElementById('form-container');
+        const target = document.getElementById('medical-target');
+        const jsonOut = document.getElementById('json-output');
+        const mainLayout = document.getElementById('main-layout');
+        const layer = document.getElementById('connection-layer');
+
+        // Store generated paths to clean them up later
+        let activePaths = [];
+
+        // Setup texts to be typed
+        const targetTexts = [
+            'None of the below',
+            'Essential hypertension requiring pharmacological intervention',
+            'Diagnosed with chronic metabolic disorder (Type A or B)',
+            'Chronic localized inflammatory arthropathy',
+            'Recurrent benign paroxysmal positional vertigo'
+        ];
+
+        function clearPaths() {
+            layer.innerHTML = '';
+            activePaths = [];
+        }
+
+        function typeWriter(element, text, speed, callback) {
+            element.innerHTML = '';
+            element.classList.add('typing-cursor');
+            let i = 0;
+
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                } else {
+                    element.classList.remove('typing-cursor');
+                    if (callback) callback();
+                }
+            }
+            type();
+        }
+
+        btn.addEventListener('click', () => {
+            // Reset state
+            container.classList.remove('scanning');
+            target.classList.remove('active');
+            jsonOut.classList.remove('visible');
+            mainLayout.classList.remove('show-json');
+
+            // Reset json structures
+            document.querySelectorAll('.json-structure').forEach(el => el.style.opacity = '0');
+
+            clearPaths();
+
+            // Clear text before shifting layout so they are ready for typing.
+            // Give them min-height so the layout doesn't completely collapse.
+            const targets = document.querySelectorAll('.code-string[id^="json-opt-"]');
+            targets.forEach((t) => {
+                t.style.display = 'inline-block';
+                t.style.minHeight = '21px';
+                t.innerHTML = ''; // Start empty for typing
+                t.style.transform = 'translateY(0)'; // reset transforms
+                t.style.transition = 'none'; // remove transition for snapping
+                t.style.color = '#e5e7eb'; // keep it plain text initially
+            });
+
+            // Clear inline styles from animation
+            const allOpts = document.querySelectorAll('.option-box');
+            allOpts.forEach(opt => opt.style.borderColor = '');
+
+            // Trigger reflow
+            void container.offsetWidth;
+
+            // Start scan
+            container.classList.add('scanning');
+            btn.innerHTML = 'Scanning...';
+            btn.style.opacity = '0.7';
+            btn.disabled = true;
+
+            // Activate target highlight during scan
+            setTimeout(() => {
+                target.classList.add('active');
+            }, 800);
+
+            // Phase 2: Shift layout and reveal JSON container
+            setTimeout(() => {
+                btn.innerHTML = 'Mapping Fields...';
+                mainLayout.classList.add('show-json');
+                jsonOut.classList.add('visible');
+            }, 2000);
+
+            // Phase 3: Wait for layout shift transition (0.6s), then map each item
+            setTimeout(() => {
+                let optIndex = 0;
+                const totalOpts = 5;
+
+                const optInterval = setInterval(() => {
+                    if (optIndex >= totalOpts) {
+                        clearInterval(optInterval);
+
+                        // Wait for the final text to finish typing (approx 1000ms) before the squish
+                        setTimeout(() => {
+                            btn.innerHTML = 'Scan Complete';
+                            btn.style.opacity = '1';
+                            btn.disabled = false;
+
+                            // 1. Reveal JSON structure
+                            document.querySelectorAll('.json-structure').forEach(el => el.style.opacity = '1');
+
+                            // 2. Squish and format strings
+                            targets.forEach((t, i) => {
+                                t.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s';
+                                t.style.transform = 'translateY(0)'; // spring back to native 0 position
+                                t.style.color = '#a5d6ff'; // shift color to classic JSON
+                                t.innerHTML = '"' + targetTexts[i] + '"'; // wrap in quotes
+                            });
+
+                            // 3. Fade out connecting lines as they detach
+                            activePaths.forEach(path => {
+                                path.lineNode.style.opacity = '0';
+                            });
+
+                        }, 1000);
+
+                        return;
+                    }
+
+                    const sourceOpt = document.getElementById(`opt-${optIndex}`);
+                    const targetJsonOpt = document.getElementById(`json-opt-${optIndex}`);
+                    const stringToType = targetTexts[optIndex];
+
+                    // Briefly highlight the form option
+                    sourceOpt.style.transition = 'border-color 0.2s ease, background-color 0.2s ease';
+                    sourceOpt.style.borderColor = '#6366F1';
+                    sourceOpt.style.backgroundColor = 'rgba(99, 102, 241, 0.05)';
+
+                    // Draw horizontal line starting from the option box's FULL right edge
+                    const cRect = sourceOpt.getBoundingClientRect();
+
+                    const sx = cRect.right + window.scrollX;
+                    const sy = cRect.top + (cRect.height / 2) + window.scrollY;
+
+                    // Perfect auto-alignment to ensure the line is strictly horizontal!
+                    let tRect = targetJsonOpt.getBoundingClientRect();
+                    let currentTy = tRect.top + (tRect.height / 2) + window.scrollY;
+                    const offset = sy - currentTy;
+
+                    if (Math.abs(offset) > 0.5) {
+                        // Apply quick offset translation directly 
+                        const currentTransform = targetJsonOpt.style.transform;
+                        // To stack transforms safely, we'll just set it. It resets cleanly.
+                        targetJsonOpt.style.transform = `translateY(${offset}px)`;
+                    }
+
+                    // Re-calculate left bound after applied offset
+                    tRect = targetJsonOpt.getBoundingClientRect();
+                    const tx = tRect.left + window.scrollX;
+
+                    const lineNode = document.createElement('div');
+                    lineNode.className = 'connection-line';
+                    lineNode.style.left = `${sx}px`;
+                    lineNode.style.top = `${sy - 1}px`;
+
+                    layer.appendChild(lineNode);
+                    void lineNode.offsetWidth;
+                    lineNode.style.width = `${tx - sx}px`;
+
+                    setTimeout(() => { lineNode.classList.add('dotted'); }, 600);
+                    activePaths.push({ lineNode, sourceEl: sourceOpt, targetEl: targetJsonOpt, sx, tx, sy });
+
+                    // Typewriter
+                    setTimeout(() => {
+                        typeWriter(targetJsonOpt, stringToType, 20);
+                    }, 350);
+
+                    optIndex++;
+                }, 1200);
+
+            }, 2700);
+        });
+
+        // Update lines on resize if visible and hasn't squished yet
+        window.addEventListener('resize', () => {
+            if (activePaths.length === 5 && activePaths[0].lineNode.style.opacity !== '0') {
+                const previousMappings = [...activePaths];
+                clearPaths();
+
+                previousMappings.forEach(mapping => {
+                    // Update starting coords
+                    const cRect = mapping.sourceEl.getBoundingClientRect();
+                    const sy = cRect.top + (cRect.height / 2) + window.scrollY;
+                    const sx = cRect.right + window.scrollX;
+
+                    // Re-align JSON text element to perfect strict horizontality
+                    let tRect = mapping.targetEl.getBoundingClientRect();
+                    let currentTy = tRect.top + (tRect.height / 2) + window.scrollY;
+
+                    // Important: When recalculating on resize, we must undo the previous transform first 
+                    // to find the true offset, but since we overwrite it, it's easier to just use the offset
+
+                    const lineNode = document.createElement('div');
+                    lineNode.className = 'connection-line dotted'; // skip animation on resize
+                    lineNode.style.left = `${sx}px`;
+                    lineNode.style.top = `${sy - 1}px`;
+                    lineNode.style.width = `${mapping.tx - sx}px`; // using old tx for stability
+
+                    layer.appendChild(lineNode);
+                    activePaths.push({ ...mapping, lineNode });
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

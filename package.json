@@ -1,0 +1,57 @@
+{
+  "name": "montage",
+  "version": "0.0.0",
+  "author": {
+    "name": "Simplex Labs",
+    "url": "https://simplex.sh"
+  },
+  "dependencies": {
+    "@remotion/bundler": "4.0.428",
+    "@remotion/cli": "4.0.428",
+    "@remotion/google-fonts": "4.0.428",
+    "@remotion/lambda": "4.0.428",
+    "@remotion/paths": "4.0.428",
+    "@remotion/player": "4.0.428",
+    "@remotion/shapes": "4.0.428",
+    "@remotion/tailwind-v4": "4.0.428",
+    "clsx": "2.1.1",
+    "geist": "^1.7.0",
+    "next": "16.1.5",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "remotion": "4.0.428",
+    "tailwind-merge": "3.0.1",
+    "zod": "4.3.6"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "3.1.0",
+    "@eslint/js": "9.38.0",
+    "@next/eslint-plugin-next": "15.1.6",
+    "@remotion/eslint-plugin": "4.0.428",
+    "@tailwindcss/postcss": "4.1.1",
+    "@types/node": "20.12.14",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "@types/web": "0.0.166",
+    "@typescript-eslint/eslint-plugin": "8.46.0",
+    "@typescript-eslint/parser": "8.46.0",
+    "autoprefixer": "10.4.20",
+    "dotenv": "17.3.1",
+    "eslint": "9.19.0",
+    "eslint-config-next": "15.1.6",
+    "postcss": "8.4.47",
+    "prettier": "3.8.1",
+    "tailwindcss": "4.0.3",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.46.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "remotion": "remotion studio",
+    "render": "remotion render",
+    "deploy": "node deploy.mjs"
+  }
+}
