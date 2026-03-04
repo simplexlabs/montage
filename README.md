@@ -37,18 +37,17 @@ Using Montage, you can churn out high quality product videos in a few hours that
 
 ## Quick Start
 
+
 ```bash
 # Clone the repo
 git clone https://github.com/simplexlabs/montage.git
 cd montage
-
 # Install dependencies
 npm install
-
-# Start Claude Code/Cursor, then prompt it:
-start the studio and create a new folder for my project called {folder_name}
-
 ```
+Then open your AI coding agent and prompt it:
+
+> start the studio and create a new folder for my project called {folder_name}
 
 The Studio launches at `localhost:3000` with a live preview of every composition.
 
