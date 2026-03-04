@@ -46,8 +46,7 @@ After every change: render key frames (entrance, mid, settled) → read the PNGs
 - The first `npx remotion still` or `npx remotion render` invocation downloads Chrome Headless Shell (~87 MB). Subsequent runs use the cached binary.
 - Remotion/video-editing conventions (spring configs, easing rules, composition IDs) are documented below and in `ANIMATION.md`.
 - **Use SF Pro Display as the default sans font.** Import `FONT_FAMILY` from `animations.ts` — never use Geist or Inter. Use weights `300` (Light), `400` (Regular), and `700` (Bold). The font files `SF-Pro-Display-Light.otf`, `SF-Pro-Display-Regular.otf`, and `SF-Pro-Display-Bold.otf` are in `public/`. Use `monospace` for terminal/code elements only.
-- ESLint and TypeScript report pre-existing unused-import errors in `Root.tsx`, `SimplexBanner.tsx`, and `SimplexLogo.tsx`. These are not regressions.
-- AWS Lambda rendering (`deploy.mjs`) is optional and requires `REMOTION_AWS_ACCESS_KEY_ID` and `REMOTION_AWS_SECRET_ACCESS_KEY` env vars. Local rendering works without them.
+- ESLint and TypeScript report pre-existing unused-import errors in `SimplexBanner.tsx` and `SimplexLogo.tsx`. These are not regressions.
 
 ---
 

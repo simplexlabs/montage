@@ -20,7 +20,6 @@ export default [
       "build/**",
       "next-env.d.ts",
       "next.config.js",
-      "deploy.mjs",
     ],
   },
   // Base JS recommended

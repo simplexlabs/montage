@@ -37,34 +37,53 @@ Using Montage, you can churn out high quality product videos in a few hours that
 
 ## Quick Start
 
+### Step 1: Install and create project
 
 ```bash
-# Clone the repo
 git clone https://github.com/simplexlabs/montage.git
 cd montage
-# Install dependencies
 npm install
+npx remotion studio
 ```
-Then open your AI coding agent and prompt it:
 
-> start the studio and create a new folder for my project called {folder_name}
+This opens the Remotion Studio where you can preview and edit compositions. You can also start the Next.js dev server with `npm run dev`, render locally with `npx remotion render`, or upgrade Remotion with `npx remotion upgrade`.
 
-The Studio launches at `localhost:3000` with a live preview of every composition.
+### Step 2: Import branding
 
+Point your coding agent to your frontend or particular branding materials, and tell it to replace the background primitives and the logo with your own. This lets the agent match your brand's colors, gradients, and logo across all compositions automatically.
+
+### Step 3: Start creating
+
+Tell the agent to create a master sequence in a new folder and start creating! You can copy any of the examples to get started, and should tell the agent to reference `AGENTS.md` and to leverage all animations possible.
 
 ## Project Structure
 
 ```
 src/remotion/
-├── shared/              # Reusable animations, text effects, backgrounds
-│   ├── animations.ts    # Spring configs, easing, animation hooks
-│   ├── FilmGrainOverlay # Film grain texture layer
-│   └── AnimationReference.tsx
-├── skills-install/      # Product install flow video
-├── cli-deep-dive/       # CLI walkthrough video
-├── QuestionFeatures/    # Feature showcase video
-├── interactivity/       # Interactive demo video
-└── Root.tsx             # All composition registrations
+├── Root.tsx                          # Composition registry
+├── index.ts                         # Remotion entry point
+├── Examples/
+│   ├── cli-deep-dive/               # CLI deep-dive video project
+│   │   ├── CLIDeepDiveMaster.tsx     # Master composition
+│   │   ├── CLIIntro.tsx
+│   │   ├── CLIInstallSection.tsx
+│   │   ├── CLISendEventsSection.tsx
+│   │   ├── CLIPauseResumeSection.tsx
+│   │   ├── CLIRunSection.tsx
+│   │   ├── CLITerminal.tsx
+│   │   └── TerminalContent.tsx
+│   └── EditorFeature/               # Editor feature video project
+│       ├── CLIDeepDiveMaster.tsx     # Master composition
+│       ├── CLIIntro.tsx
+│       ├── BrowserGrid.tsx
+│       ├── EditorPeek.tsx
+│       └── ... (19 files)
+└── shared/                          # Reusable components
+    ├── animations.ts                # Animation hooks & utilities
+    ├── AnimationReference.tsx
+    ├── EditorShowcase.tsx
+    ├── EditorShowcase2.tsx
+    └── ... (18 files)
 ```
 
 ## Animation System
@@ -80,45 +99,15 @@ See [`ANIMATION.md`](ANIMATION.md) for the full API reference.
 
 ## Compositions
 
-<!-- TODO: Add rendered frame thumbnails for each composition -->
-
-| Composition | Description | Duration |
-|---|---|---|
-| `SkillsInstallMaster` | Full product install walkthrough | ~30s |
-| `SkillsInstall-Intro` | Intro sequence | 340 frames |
-| `SkillsInstall-BrowserSection` | Browser login flow | 180 frames |
-| `SkillsInstall-SDKSection` | SDK dashboard | 180 frames |
-| `CLIDeepDiveMaster` | CLI feature walkthrough | ~30s |
-| `AnimationReference` | All 25 animation primitives | 2250 frames |
-| `AnimationDemo` | Text animation templates | 450 frames |
-| `BackgroundExamples` | Background layer primitives | 450 frames |
-
-## Deploy with Lambda
-
-Montage supports serverless rendering via [Remotion Lambda](https://remotion.dev/lambda):
-
-```bash
-# Configure AWS credentials
-cp .env.example .env
-# Fill in REMOTION_AWS_ACCESS_KEY_ID and REMOTION_AWS_SECRET_ACCESS_KEY
-
-# Deploy the Lambda function
-node deploy.mjs
-```
-
-## Commands
-
-| Command | Description |
-|---|---|
-| `npm run dev` | Start the Next.js dev server |
-| `npx remotion studio` | Open the Remotion visual editor |
-| `npx remotion render` | Render a composition to video |
-| `npx remotion still` | Render a single frame to PNG |
-| `npx remotion upgrade` | Upgrade Remotion to latest |
-
-## Contributing
-
-Contributions welcome. Please open an issue first to discuss what you'd like to change.
+| Folder | Composition | Description |
+| --- | --- | --- |
+| Examples / CLI-Deep-Dive | `CLIDeepDiveMaster` | Full CLI deep-dive video |
+| Examples / CLI-Deep-Dive | `CLI-Intro`, `CLI-Install`, `CLI-SendEvents`, `CLI-PauseResume`, `CLI-Run` | Individual sections |
+| Examples / EditorFeature | `EditorFeatureMaster` | Full editor feature video |
+| Examples / EditorFeature | `EditorFeature-Intro`, `EditorFeature-BrowserGrid` | Individual sections |
+| Shared | `AnimationReference` | Animation library reference |
+| Shared | `EditorShowcase`, `EditorShowcase2` | Editor UI mockups |
+| Shared | `SimplexBanner`, `SimplexLogo`, `SimplexText`, etc. | Brand components |
 
 ## Acknowledgments
 

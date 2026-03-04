@@ -1,6 +1,6 @@
 import { loadFont } from "@remotion/google-fonts/JetBrainsMono";
 import { AbsoluteFill } from "remotion";
-import { TerminalContent } from "../cli-deep-dive/TerminalContent";
+import { TerminalContent } from "../Examples/cli-deep-dive/TerminalContent";
 
 const { fontFamily: monoFont } = loadFont("normal", {
   weights: ["400", "500"],

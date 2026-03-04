@@ -10,7 +10,6 @@
     "@remotion/bundler": "4.0.428",
     "@remotion/cli": "4.0.428",
     "@remotion/google-fonts": "4.0.428",
-    "@remotion/lambda": "4.0.428",
     "@remotion/paths": "4.0.428",
     "@remotion/player": "4.0.428",
     "@remotion/shapes": "4.0.428",
@@ -37,7 +36,6 @@
     "@typescript-eslint/eslint-plugin": "8.46.0",
     "@typescript-eslint/parser": "8.46.0",
     "autoprefixer": "10.4.20",
-    "dotenv": "17.3.1",
     "eslint": "9.19.0",
     "eslint-config-next": "15.1.6",
     "postcss": "8.4.47",
@@ -52,7 +50,6 @@
     "start": "next start",
     "lint": "eslint .",
     "remotion": "remotion studio",
-    "render": "remotion render",
-    "deploy": "node deploy.mjs"
+    "render": "remotion render"
   }
 }
