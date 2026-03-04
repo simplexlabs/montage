@@ -7,7 +7,6 @@
 </p>
 
 <p align="center">
-  <a href="https://www.linkedin.com/company/usesimplex/"><img alt="LinkedIn" src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white&labelColor=000"></a>
   <img alt="License" src="https://img.shields.io/github/license/simplexlabs/montage?style=for-the-badge&labelColor=000">
   <img alt="Works with" src="https://img.shields.io/badge/Works%20with-Cursor%20%7C%20Claude%20Code%20%7C%20Codex-blue?style=for-the-badge&labelColor=000">
 </p>
