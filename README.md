@@ -108,5 +108,5 @@ Note: Remotion itself has its own license. Some entities may need a Remotion com
 ---
 
 <p align="center">
-  Built by <a href="https://simplex.sh">Simplex Labs</a>
+  Built by <a href="https://simplex.sh">Simplex</a>
 </p>
