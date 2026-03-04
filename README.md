@@ -33,7 +33,7 @@ Montage is an agentic fork of [Remotion](https://remotion.dev)'s NextJS app that
 
 Using Montage, you can churn out high quality product videos in a few hours that look like this:
 
-<video src="assets/editor-feature-master.mp4" width="720" controls></video>
+<video src="https://github.com/user-attachments/assets/e7257684-72e1-47a3-a9e6-0c94b801dc8f" width="720" controls></video>
 
 ## Quick Start
 
