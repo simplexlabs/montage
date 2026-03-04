@@ -1,9 +1,3 @@
-<p align="center">
-  <a href="https://simplex.sh">
-    <img alt="Simplex Labs" src="public/simplex_logo.png" height="80">
-  </a>
-</p>
-
 <h1 align="center">Montage</h1>
 
 <h3 align="center">Build agentic product videos with Next.js + Remotion</h3>
@@ -13,17 +7,10 @@
 </p>
 
 <p align="center">
-  <a href="https://simplex.sh"><img alt="Made by Simplex Labs" src="https://img.shields.io/badge/MADE%20BY%20Simplex%20Labs-7C3AED?style=for-the-badge&labelColor=000"></a>
+  <a href="https://www.linkedin.com/company/usesimplex/"><img alt="LinkedIn" src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white&labelColor=000"></a>
   <img alt="License" src="https://img.shields.io/github/license/simplexlabs/montage?style=for-the-badge&labelColor=000">
-  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white&labelColor=000">
-  <img alt="React" src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=white&labelColor=000">
+  <img alt="Works with" src="https://img.shields.io/badge/Works%20with-Cursor%20%7C%20Claude%20Code%20%7C%20Codex-blue?style=for-the-badge&labelColor=000">
 </p>
-
-<!-- TODO: Add a demo GIF here showing a rendered video
-<p align="center">
-  <img src="assets/demo.gif" alt="Montage demo" width="720">
-</p>
--->
 
 ---
 
