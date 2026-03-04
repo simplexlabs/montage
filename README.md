@@ -29,9 +29,11 @@
 
 ## What is Montage?
 
-Montage is a toolkit for building polished product videos entirely in code. Instead of dragging clips around in a timeline editor, you compose scenes with React components, animate with spring physics, and render to MP4.
+Montage is an agentic fork of [Remotion](https://remotion.dev)'s NextJS app that's set up for agents to quickly churn out high quality launch videos. This repo is NOT meant to be run manually -- you should open it in Claude Code, Cursor, Codex, etc.
 
-Built on [Remotion](https://remotion.dev) and [Next.js](https://nextjs.org), it includes a library of production-ready animations, background systems, and text effects — the same ones used in [Simplex](https://simplex.sh) product videos.
+Using Montage, you can churn out high quality product videos in a few hours that look like this:
+
+<video src="assets/editor-feature-master.mp4" width="720" controls></video>
 
 ## Quick Start
 
@@ -43,21 +45,13 @@ cd montage
 # Install dependencies
 npm install
 
-# Open the visual editor
-npx remotion studio
+# Start Claude Code/Cursor, then prompt it:
+start the studio and create a new folder for my project called {folder_name}
+
 ```
 
 The Studio launches at `localhost:3000` with a live preview of every composition.
 
-## Render a Video
-
-```bash
-# Render a specific composition to MP4
-npx remotion render src/remotion/index.ts <CompositionId>
-
-# Render a single frame as PNG
-npx remotion still src/remotion/index.ts <CompositionId> --frame=60 --output=frame.png
-```
 
 ## Project Structure
 
