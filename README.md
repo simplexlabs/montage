@@ -33,7 +33,7 @@ npm install
 npx remotion studio
 ```
 
-This opens the Remotion Studio where you can preview and edit compositions. You can also start the Next.js dev server with `npm run dev`, render locally with `npx remotion render`, or upgrade Remotion with `npx remotion upgrade`.
+This opens the Remotion Studio where you can preview and edit compositions. You can also start the Next.js dev server with `npm run dev`, render locally with `npx remotion render`.
 
 ### Step 2: Import branding
 
