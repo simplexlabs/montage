@@ -18,7 +18,7 @@
 
 Montage is an agentic fork of [Remotion](https://remotion.dev)'s NextJS app that's set up for agents to quickly churn out high quality launch videos. This repo is NOT meant to be run manually -- you should open it in Claude Code, Cursor, Codex, etc.
 
-Using Montage, you can churn out high quality product videos in a few hours that look like this:
+Using Montage, you can create product videos in a few hours that look like this:
 
 <video src="https://github.com/user-attachments/assets/e7257684-72e1-47a3-a9e6-0c94b801dc8f" width="720" controls></video>
 
