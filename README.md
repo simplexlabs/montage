@@ -3,10 +3,6 @@
 <h3 align="center">Build agentic product videos with Next.js + Remotion</h3>
 
 <p align="center">
-  Programmatic motion graphics for product demos, feature walkthroughs, and launch videos — all written in React.
-</p>
-
-<p align="center">
   <a href="https://simplex.sh"><img alt="Built by Simplex" src="https://img.shields.io/badge/Built%20by%20Simplex-7C3AED?style=for-the-badge&labelColor=000"></a>
   <img alt="License" src="https://img.shields.io/github/license/simplexlabs/montage?style=for-the-badge&labelColor=000">
   <img alt="Works with" src="https://img.shields.io/badge/Works%20with-Cursor%20%7C%20Claude%20Code%20%7C%20Codex-blue?style=for-the-badge&labelColor=000">
